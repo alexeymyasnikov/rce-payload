@@ -1,0 +1,8 @@
+{
+  "desktopNavigation": {
+    "9.0": {
+      "serverJs": "https://cdn.tbank.ru/s3aas/boxy/mm/desktop-heading/20.89.0/desktop-heading.server.js",
+      "clientJs": "https://cdn.tbank.ru/robots.txt"
+    }
+  }
+}
